@@ -10,11 +10,42 @@ struct distance_table
   int costs[4][4];
 } dt2;
 
-
+struct rtpkt new_rtpkt;
 /* students to write the following two routines, and maybe some others */
-
+void send()
+{
+  for (int i = 0; i < 4; i++)
+  {
+    if (i != 2 && dt2.costs[i][i] != 999)
+    {
+      new_rtpkt.sourceid = 2;
+      new_rtpkt.destid = i;
+      for (int j = 0; j < 4; j++)
+      {
+        for(int k = 0; k < 4; k++)
+        {
+          if(new_rtpkt.mincost[j] > dt2.costs[j][k])
+            new_rtpkt.mincost[j] = dt2.costs[j][k];
+        }
+      }
+      tolayer2(new_rtpkt);
+    }
+  }
+}
 void rtinit2() 
 {
+  for(int i = 0; i < 4; i++)
+  {
+		for(int j = 0; j < 4; j++)
+    {
+			dt1.costs[i][j] = 999;
+		}
+	}
+  dt2.costs[2][2] = 0;
+  dt2.costs[0][0] = 3;
+  dt2.costs[1][1] = 1;
+  dt2.costs[3][3] = 2;
+  send();
 }
 
 
