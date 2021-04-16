@@ -16,6 +16,9 @@ struct rtpkt new_rtpkt;
 /* students to write the following two routines, and maybe some others */
 void send_1()
 {
+  for(int i = 0; i<4; i++)
+    new_rtpkt.mincost[i] = 999;
+
   for (int i = 0; i < 4; i++)
   {
     if (i != 1 && dt1.costs[i][i] != 999)
@@ -52,8 +55,6 @@ void rtinit1()
 
 
 void rtupdate1(struct rtpkt *rcvdpkt)
-
-
 {
   int source = rcvdpkt->sourceid;
 

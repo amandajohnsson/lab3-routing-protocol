@@ -13,6 +13,9 @@ struct rtpkt new_rtpkt;
 /* students to write the following two routines, and maybe some others */
 void send_3()
 {
+  for(int i = 0; i<4; i++)
+    new_rtpkt.mincost[i] = 999;
+
   for (int i = 0; i < 4; i++)
   {
     if (i != 3 && dt3.costs[i][i] != 999)

@@ -10,10 +10,15 @@ struct distance_table
   int costs[4][4];
 } dt0;
 
+
+
 struct rtpkt new_rtpkt;
 /* students to write the following two routines, and maybe some others */
 void send()
 {
+  for(int i = 0; i<4; i++)
+    new_rtpkt.mincost[i] = 999;
+
   for (int i = 0; i < 4; i++)
   {
     if (i != 0 && dt0.costs[i][i] != 999)
