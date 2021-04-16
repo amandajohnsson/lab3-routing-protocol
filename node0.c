@@ -5,7 +5,7 @@ extern int TRACE;
 extern int YES;
 extern int NO;
 
-struct distance_table 
+struct distance_table
 {
   int costs[4][4];
 } dt0;
@@ -32,13 +32,13 @@ void send()
     }
   }
 }
-void rtinit0() 
+void rtinit0()
 {
   for(int i = 0; i < 4; i++)
   {
 		for(int j = 0; j < 4; j++)
     {
-			dt1.costs[i][j] = 999;
+			dt0.costs[i][j] = 999;
 		}
 	}
   dt0.costs[0][0] = 0;
@@ -52,12 +52,19 @@ void rtinit0()
 
 void rtupdate0(struct rtpkt *rcvdpkt)
 {
+  int source = rcvdpkt->sourceid;
 
+  for (int destination = 0; destination < 4; destination++) {
+    if (dt0.costs[destination][source] > dt0.costs[source][source] + rcvdpkt->mincost[destination]) {
+      dt0.costs[destination][source] = dt0.costs[source][source] + rcvdpkt->mincost[destination];
+    }
+  }
+  send();
 }
 
 
 void printdt0(struct distance_table *dtptr)
- 
+
 {
   printf("                via     \n");
   printf("   D0 |    1     2    3 \n");
@@ -77,7 +84,6 @@ void linkhandler0(int linkid, int newcost)
 /* You can leave this routine empty if you're an undergrad. If you want */
 /* to use this routine, you'll need to change the value of the LINKCHANGE */
 /* constant definition in prog3.c from 0 to 1 */
-	
+
 {
 }
-

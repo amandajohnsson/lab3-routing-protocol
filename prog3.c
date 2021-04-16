@@ -23,7 +23,7 @@ void creatertpkt( struct rtpkt *initrtpkt, int srcid, int destid, int * mincosts
   initrtpkt->destid = destid;
   for (i=0; i<4; i++)
     initrtpkt->mincost[i] = mincosts[i];
-}  
+}
 
 
 /*****************************************************************
@@ -63,14 +63,14 @@ float jimsrand();
 void insertevent(struct event *p);
 
 
-main()
+int main()
 {
    struct event *eventptr;
-   
+
    init();
-   
+
    while (1) {
-     
+
         eventptr = evlist;            /* get next event to simulate */
         if (eventptr==NULL)
            goto terminate;
@@ -83,20 +83,20 @@ main()
           if (eventptr->evtype == FROM_LAYER2 ) {
 	    printf(" src:%2d,",eventptr->rtpktptr->sourceid);
             printf(" dest:%2d,",eventptr->rtpktptr->destid);
-            printf(" contents: %3d %3d %3d %3d\n", 
+            printf(" contents: %3d %3d %3d %3d\n",
               eventptr->rtpktptr->mincost[0], eventptr->rtpktptr->mincost[1],
               eventptr->rtpktptr->mincost[2], eventptr->rtpktptr->mincost[3]);
             }
           }
         clocktime = eventptr->evtime;    /* update time to next event time */
         if (eventptr->evtype == FROM_LAYER2 ) {
-            if (eventptr->eventity == 0) 
+            if (eventptr->eventity == 0)
 	      rtupdate0(eventptr->rtpktptr);
-	     else if (eventptr->eventity == 1) 
+	     else if (eventptr->eventity == 1)
 	      rtupdate1(eventptr->rtpktptr);
-	     else if (eventptr->eventity == 2) 
+	     else if (eventptr->eventity == 2)
 	      rtupdate2(eventptr->rtpktptr);
-	     else if (eventptr->eventity == 3) 
+	     else if (eventptr->eventity == 3)
 	      rtupdate3(eventptr->rtpktptr);
              else { printf("Panic: unknown event entity\n"); exit(0); }
 	  }
@@ -112,11 +112,11 @@ main()
 	  }
           else
              { printf("Panic: unknown event type\n"); exit(0); }
-        if (eventptr->evtype == FROM_LAYER2 ) 
+        if (eventptr->evtype == FROM_LAYER2 )
           free(eventptr->rtpktptr);        /* free memory for packet, if any */
         free(eventptr);                    /* free memory for event struct   */
       }
-   
+
 
 terminate:
    printf("\nSimulator terminated at t=%f, no packets in medium\n", clocktime);
@@ -130,8 +130,8 @@ void init()                         /* initialize the simulator */
   int i;
   float sum, avg;
   float jimsrand();
-  struct event *evptr;  
-  
+  struct event *evptr;
+
    printf("Enter TRACE:");
    scanf("%d",&TRACE);
 
@@ -141,7 +141,7 @@ void init()                         /* initialize the simulator */
       sum=sum+jimsrand();    /* jimsrand() should be uniform in [0,1] */
    avg = sum/1000.0;
    if (avg < 0.25 || avg > 0.75) {
-    printf("It is likely that random number generation on your machine\n" ); 
+    printf("It is likely that random number generation on your machine\n" );
     printf("is different from what this emulator expects.  Please take\n");
     printf("a look at the routine jimsrand() in the emulator code. Sorry. \n");
     exit(-1);
@@ -165,9 +165,9 @@ void init()                         /* initialize the simulator */
    evptr->evtype =  LINK_CHANGE;
    evptr->evtime =  20000.0;
    evptr->rtpktptr =  NULL;
-   insertevent(evptr);    
+   insertevent(evptr);
    }
-  
+
 }
 
 /****************************************************************************/
@@ -175,28 +175,28 @@ void init()                         /* initialize the simulator */
 /* isolate all random number generation in one location.  We assume that the*/
 /* system-supplied rand() function return an int in therange [0,mmm]        */
 /****************************************************************************/
-float jimsrand() 
+float jimsrand()
 {
  // double mmm = 2147483647;   /* largest int  - MACHINE DEPENDENT!!!!!!!!   */
   double mmm = RAND_MAX;
-  float x;                   /* individual students may need to change mmm */ 
+  float x;                   /* individual students may need to change mmm */
   x = rand()/mmm;            /* x should be uniform in [0,1] */
   return(x);
-}  
+}
 
 /********************* EVENT HANDLINE ROUTINES *******/
 /*  The next set of routines handle the event list   */
 /*****************************************************/
- 
+
 
 void insertevent(struct event *p)
-   
+
 {
    struct event *q,*qold;
 
    if (TRACE>3) {
       printf("            INSERTEVENT: time is %lf\n",clocktime);
-      printf("            INSERTEVENT: future time will be %lf\n",p->evtime); 
+      printf("            INSERTEVENT: future time will be %lf\n",p->evtime);
       }
    q = evlist;     /* q points to header of list in which p struct inserted */
    if (q==NULL) {   /* list is empty */
@@ -206,7 +206,7 @@ void insertevent(struct event *p)
         }
      else {
         for (qold = q; q !=NULL && p->evtime > q->evtime; q=q->next)
-              qold=q; 
+              qold=q;
         if (q==NULL) {   /* end of list */
              qold->next = p;
              p->prev = qold;
@@ -240,8 +240,8 @@ void printevlist()
 
 /************************** TOLAYER2 ***************/
 void tolayer2(struct rtpkt packet)
-  
-  
+
+
 {
  struct rtpkt *mypktptr;
  struct event *evptr, *q;
@@ -259,7 +259,7 @@ void tolayer2(struct rtpkt packet)
  connectcosts[2][3]=2;
  connectcosts[3][0]=7;  connectcosts[3][1]=999;  connectcosts[3][2]=2;
  connectcosts[3][3]=0;
-    
+
  /* be nice: check if source and destination id's are reasonable */
  if (packet.sourceid<0 || packet.sourceid >3) {
    printf("WARNING: illegal source id in your packet, ignoring packet!\n");
@@ -279,14 +279,14 @@ void tolayer2(struct rtpkt packet)
    }
 
 /* make a copy of the packet student just gave me since he/she may decide */
-/* to do something with the packet after we return back to him/her */ 
+/* to do something with the packet after we return back to him/her */
  mypktptr = (struct rtpkt *) malloc(sizeof(struct rtpkt));
  mypktptr->sourceid = packet.sourceid;
  mypktptr->destid = packet.destid;
  for (i=0; i<4; i++)
     mypktptr->mincost[i] = packet.mincost[i];
  if (TRACE>2)  {
-   printf("    TOLAYER2: source: %d, dest: %d\n              costs:", 
+   printf("    TOLAYER2: source: %d, dest: %d\n              costs:",
           mypktptr->sourceid, mypktptr->destid);
    for (i=0; i<4; i++)
         printf("%d  ",mypktptr->mincost[i]);
@@ -304,14 +304,13 @@ void tolayer2(struct rtpkt packet)
    time units after the latest arrival time of packets
    currently in the medium on their way to the destination */
  lastime = clocktime;
- for (q=evlist; q!=NULL ; q = q->next) 
-    if ( (q->evtype==FROM_LAYER2  && q->eventity==evptr->eventity) ) 
+ for (q=evlist; q!=NULL ; q = q->next)
+    if ( (q->evtype==FROM_LAYER2  && q->eventity==evptr->eventity) )
       lastime = q->evtime;
  evptr->evtime =  lastime + 2.*jimsrand();
 
- 
- if (TRACE>2)  
+
+ if (TRACE>2)
      printf("    TOLAYER2: scheduling arrival on other side\n");
  insertevent(evptr);
-} 
-
+}
