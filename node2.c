@@ -16,7 +16,7 @@ void send_2()
 {
   for(int i = 0; i<4; i++)
     new_rtpkt.mincost[i] = 999;
-    
+
   for (int i = 0; i < 4; i++)
   {
     if (i != 2 && dt2.costs[i][i] != 999)
@@ -59,9 +59,11 @@ void rtupdate2(struct rtpkt *rcvdpkt)
   for (int destination = 0; destination < 4; destination++) {
     if (dt2.costs[destination][source] > dt2.costs[source][source] + rcvdpkt->mincost[destination]) {
       dt2.costs[destination][source] = dt2.costs[source][source] + rcvdpkt->mincost[destination];
+      send_2();
+
     }
   }
-  send_2();
+
 
 }
 

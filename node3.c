@@ -59,9 +59,10 @@ void rtupdate3(struct rtpkt *rcvdpkt)
   for (int destination = 0; destination < 4; destination++) {
     if (dt3.costs[destination][source] > dt3.costs[source][source] + rcvdpkt->mincost[destination]) {
       dt3.costs[destination][source] = dt3.costs[source][source] + rcvdpkt->mincost[destination];
+      send_3();
     }
   }
-  send_3();
+
 }
 
 
